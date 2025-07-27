@@ -2,6 +2,9 @@ import { useState } from "react";
 import PasswordChecklist from "react-password-checklist";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { jwtDecode } from "jwt-decode";
+import { loginSuccess } from "../../features/auth/authSlice";
 
 const Login = () => {
   const [state, setState] = useState("Sign up");
@@ -13,6 +16,7 @@ const Login = () => {
   const [address, setAddress] = useState("");
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const validate = () => {
     const newErrors = {};
@@ -65,24 +69,47 @@ const Login = () => {
         console.log(" Submitting signup data:", payload);
         await axios.post("http://localhost:8080/api/users/signup", payload);
         alert("Sign up successful!");
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setPassword("");
+        setPhoneNumber("");
+        setAddress("");
         setState("Sign in");
       } else {
         const res = await axios.post("http://localhost:8080/api/users/signin", {
           email,
           password,
         });
-        alert("Login successful!");
-        localStorage.setItem("token", res.data.token);
-        // localStorage.setItem(
-        //   "id",
-        //   res.data.id || res.data.user.id || (res.user && res.user.id)
-        // );
-        //  To save the user ID from the response
-        console.log("Response from backend:", res.data); // ✅ Add this line
 
-        localStorage.setItem("id", res.data.user.id);
-        localStorage.setItem("email", email);
-        navigate("/");
+        // localStorage.setItem("token", res.data.token);
+        // // localStorage.setItem(
+        // //   "id",
+        // //   res.data.id || res.data.user.id || (res.user && res.user.id)
+        // // );
+        // //  To save the user ID from the response
+        // console.log("Response from backend:", res.data);
+
+        // localStorage.setItem("id", res.data.id);
+        // localStorage.setItem("email", email);
+        // navigate("/");
+        const { token } = res.data;
+        const userPayload = jwtDecode(token);
+        dispatch(loginSuccess({ user: userPayload, token })); // Dispatch the login action()
+        localStorage.setItem("token", token);
+        localStorage.setItem("id", userPayload.id);
+        alert("Login successful!");
+        switch (userPayload.role) {
+          case "admin":
+            navigate("/admin/AdminDashboard");
+            break;
+          case "department":
+            navigate("/department/DepartmentDashboard");
+            break;
+          default:
+            navigate("/");
+            break;
+        }
       }
     } catch (err) {
       console.error(" Error:", err.response?.data);
@@ -108,7 +135,7 @@ const Login = () => {
           <>
             <div className="flex flex-col">
               <label className="text-sm font-medium text-[#2772A0]">
-                First Name
+                First Name <span className="text-red-500"> *</span>
               </label>
               <input
                 type="text"
@@ -124,7 +151,7 @@ const Login = () => {
             {/* Last Name */}
             <div className="flex flex-col">
               <label className="text-sm font-medium text-[#2772A0]">
-                Last Name
+                Last Name <span className="text-red-500"> *</span>
               </label>
               <input
                 type="text"
@@ -140,7 +167,7 @@ const Login = () => {
             {/* Phone Number */}
             <div className="flex flex-col">
               <label className="text-sm font-medium text-[#2772A0]">
-                Phone Number
+                Phone Number <span className="text-red-500"> *</span>
               </label>
               <input
                 type="text"
@@ -158,7 +185,7 @@ const Login = () => {
             {/* Address */}
             <div className="flex flex-col">
               <label className="text-sm font-medium text-[#2772A0]">
-                Address
+                Address <span className="text-red-500"> *</span>
               </label>
               <textarea
                 rows="2"
@@ -175,7 +202,9 @@ const Login = () => {
 
         {/* Email */}
         <div className="flex flex-col">
-          <label className="text-sm font-medium text-[#2772A0]">Email</label>
+          <label className="text-sm font-medium text-[#2772A0]">
+            Email <span className="text-red-500"> *</span>
+          </label>
           <input
             type="email"
             value={email}
@@ -189,7 +218,9 @@ const Login = () => {
 
         {/* Password */}
         <div className="flex flex-col">
-          <label className="text-sm font-medium text-[#2772A0]">Password</label>
+          <label className="text-sm font-medium text-[#2772A0]">
+            Password <span className="text-red-500"> *</span>
+          </label>
           <input
             type="password"
             value={password}

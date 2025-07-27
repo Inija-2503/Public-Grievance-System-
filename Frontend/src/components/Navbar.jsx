@@ -1,28 +1,43 @@
-import { NavLink, useNavigate, useLocation } from "react-router-dom";
+import { NavLink, useNavigate, Link } from "react-router-dom";
 import logo from "../assets/logo.png";
-import profile from "../assets/profile.jpg";
-import { useState, useEffect } from "react";
+// import profile from "../assets/profile.jpg";
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../features/auth/authSlice";
+
+const ProfileIcon = ({ name }) => (
+  <div className="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold cursor-pointer">
+    {name ? name.charAt(0).toUpperCase() : "U"}
+  </div>
+);
 
 const Navbar = () => {
   //   const [showMenu, setShowMenu] = useState(false);
   // const [token, setToken] = useState(true); // when we have token we login and when we dont we have logout
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
-  const location = useLocation();
+  // const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+  // const location = useLocation();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  useEffect(() => {
-    // This can be a token check or API call in real apps
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
-  }, [location]);
-
+  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  // useEffect(() => {
+  //   // This can be a token check or API call in real apps
+  //   const token = localStorage.getItem("token");
+  //   setIsLoggedIn(!!token);
+  // }, [location]);
+
   const handleLogout = () => {
+    dispatch(logout());
     localStorage.removeItem("token");
-    setIsLoggedIn(false);
+    setDropdownOpen(false);
     navigate("/login");
   };
-  const handleToggleDropdown = () => {
-    setDropdownOpen((prev) => !prev);
+  // const handleToggleDropdown = () => {
+  //   setDropdownOpen((prev) => !prev);
+  // };
+  const handleNavigate = (path) => {
+    navigate(path);
+    setDropdownOpen(false); // Close dropdown on navigation
   };
   return (
     <div className="flex justify-between items-center bg-white px-4 py-4 shadow-md mb-7">
@@ -82,19 +97,25 @@ const Navbar = () => {
         </NavLink>
       </ul>
       <div className="flex items-center gap-4">
-        {isLoggedIn ? (
+        {/* {isLoggedIn ? (
           <div className=" relative">
             <img
               src={profile}
               alt="profile"
               className="w-10 h-10 rounded-full"
               onClick={handleToggleDropdown}
-            />
+            /> */}
+        {user ? (
+          <div className="relative">
+            <div onClick={() => setDropdownOpen((prev) => !prev)}>
+              <ProfileIcon name={user.firstName} />
+            </div>
+
             {dropdownOpen && (
               <div className="absolute top-14 right-0 text-base font-medium text-[#2772A0] z-20">
                 <div className="w-50 bg-[#CCDDEA] text-[#2772A0] rounded-lg shadow-lg p-8 flex flex-col gap-3">
                   <p
-                    onClick={() => navigate("/my-profile")}
+                    onClick={() => handleNavigate("/my-profile")}
                     className="hover:text-black cursor-pointer"
                   >
                     My profile

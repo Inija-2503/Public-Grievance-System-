@@ -1,87 +1,125 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import { updateUserSuccess } from "../../features/auth/authSlice";
 
 const MyProfile = () => {
-  const [user, setUser] = useState({});
-  const [originalUser, setOriginalUser] = useState({});
+  // const [user, setUser] = useState({});
+  // const [originalUser, setOriginalUser] = useState({});
+  const [formData, setFormData] = useState({});
   const [editMode, setEditMode] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState(null);
+  const { user, token } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
-  const id = localStorage.getItem("id");
-  const token = localStorage.getItem("token");
+  // const id = localStorage.getItem("id");
+  // const token = localStorage.getItem("token");
 
   //  Fetch user profile on component mount
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        if (!id || id === "undefined" || !token) {
-          setError("User not logged in properly");
-          return;
-        }
+    // const fetchUser = async () => {
+    //   try {
+    //     if (!id || id === "undefined" || !token) {
+    //       setError("User not logged in properly");
+    //       return;
+    //     }
 
-        const res = await axios.get(`http://localhost:8080/api/users/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+    //     const res = await axios.get(`http://localhost:8080/api/users/${id}`, {
+    //       headers: {
+    //         Authorization: `Bearer ${token}`,
+    //       },
+    //     });
 
-        setUser(res.data);
-        setOriginalUser(res.data);
-        setError(null);
-      } catch (err) {
-        console.error("Failed to fetch user:", err);
-        setError("Failed to load profile. Please try again.");
-      }
-    };
+    //     setUser(res.data);
+    //     setOriginalUser(res.data);
+    //     setError(null);
+    //   } catch (err) {
+    //     console.error("Failed to fetch user:", err);
+    //     setError("Failed to load profile. Please try again.");
+    //   }
+    // };
 
-    fetchUser();
-  }, [id, token]);
+    // fetchUser();
+    if (user) {
+      setFormData(user);
+    }
+  }, [user]);
 
   //  Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUser((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   //  Save updates
+  // const handleSave = async () => {
+  //   try {
+  //     if (!user?.id || !token) {
+  //       setError("Invalid user or token");
+  //       return;
+  //     }
+
+  //     setIsSaving(true);
+
+  //     const res = await axios.put(
+  //       `http://localhost:8080/api/users/${id}`,
+  //       user,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+
+  //     setUser(res.data);
+  //     setOriginalUser(res.data);
+  //     setEditMode(false);
+  //     setError(null);
+  //   } catch (err) {
+  //     console.error("Failed to update user:", err);
+  //     setError(err.response?.data?.message || "Failed to save changes.");
+  //   } finally {
+  //     setIsSaving(false);
+  //   }
+  // };
+
+  // //  Cancel edit
+  // const handleCancel = () => {
+  //   setUser(originalUser);
+  //   setEditMode(false);
+  //   setError(null);
+  // };
   const handleSave = async () => {
+    if (!user?.id || !token) return;
+    setIsSaving(true);
     try {
-      if (!id || id === "undefined" || !token) {
-        setError("Invalid user or token");
-        return;
-      }
-
-      setIsSaving(true);
-
       const res = await axios.put(
-        `http://localhost:8080/api/users/${id}`,
-        user,
+        `http://localhost:8080/api/users/${user.id}`,
+        formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-
-      setUser(res.data);
-      setOriginalUser(res.data);
+      dispatch(updateUserSuccess(res.data));
       setEditMode(false);
       setError(null);
+      alert("Profile updated!");
     } catch (err) {
-      console.error("Failed to update user:", err);
-      setError(err.response?.data?.message || "Failed to save changes.");
+      console.log("Failed to update profile:", err);
+      setError(err.response?.data?.message || "Failed to save");
     } finally {
       setIsSaving(false);
     }
   };
-
-  //  Cancel edit
   const handleCancel = () => {
-    setUser(originalUser);
+    setFormData(user);
     setEditMode(false);
-    setError(null);
   };
+
+  if (!user) return <div>Loading profile...</div>;
 
   return (
     <div className="p-6 max-w-xl mx-auto bg-white shadow rounded mb-7">
@@ -94,33 +132,33 @@ const MyProfile = () => {
           <label className="block font-semibold">Name</label>
           <input
             type="text"
-            name="firstName"
-            value={user.firstName || ""}
+            name="name"
+            value={formData.name || ""}
             onChange={handleChange}
             disabled={!editMode}
             className="w-full border px-3 py-2 rounded"
           />
         </div>
-        <div>
+        {/* <div>
           <label className="block font-semibold">Name</label>
           <input
             type="text"
             name="lastName"
-            value={user.lastName || ""}
+            value={formData.lastName || ""}
             onChange={handleChange}
             disabled={!editMode}
             className="w-full border px-3 py-2 rounded"
           />
-        </div>
+        </div> */}
 
         <div>
           <label className="block font-semibold">Email</label>
           <input
             type="email"
             name="email"
-            value={user.email || ""}
+            value={formData.email || ""}
             onChange={handleChange}
-            disabled={!editMode}
+            disabled={editMode}
             className="w-full border px-3 py-2 rounded bg-gray-100"
           />
         </div>
@@ -130,18 +168,18 @@ const MyProfile = () => {
           <input
             type="text"
             name="phoneNumber"
-            value={user.phoneNumber || ""}
+            value={formData.phoneNumber || ""}
             onChange={handleChange}
             disabled={!editMode}
             className="w-full border px-3 py-2 rounded"
           />
         </div>
         <div>
-          <label className="block font-semibold">Phone</label>
+          <label className="block font-semibold">Address</label>
           <textarea
             name="address"
             type="text"
-            value={user.address || ""}
+            value={formData.address || ""}
             onChange={handleChange}
             rows="2"
             disabled={!editMode}
