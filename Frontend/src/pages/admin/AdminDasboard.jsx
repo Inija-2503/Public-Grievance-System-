@@ -1,7 +1,7 @@
 import React from "react";
 
 const AdminDasboard = () => {
-  return <div>AdminDasboard</div>;
+  return <div>Admin Dasboard</div>;
 };
 
 export default AdminDasboard;
