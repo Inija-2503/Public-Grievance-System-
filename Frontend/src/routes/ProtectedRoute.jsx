@@ -2,8 +2,12 @@ import { useSelector } from "react-redux";
 import { Navigate, useLocation } from "react-router-dom";
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
-  const { user } = useSelector((state) => state.auth);
+  const { user, isLoading } = useSelector((state) => state.auth);
   const location = useLocation();
+
+  if (isLoading) {
+    return <div className="p-4 text-center">Loading session...</div>;
+  }
 
   if (!user) {
     // User is not logged in

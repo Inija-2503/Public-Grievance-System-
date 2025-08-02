@@ -166,9 +166,9 @@ const MyProfile = () => {
         <div>
           <label className="block font-semibold">Phone</label>
           <input
-            type="text"
+            type="tel"
             name="phoneNumber"
-            value={formData.phoneNumber || ""}
+            value={formData.phone || ""}
             onChange={handleChange}
             disabled={!editMode}
             className="w-full border px-3 py-2 rounded"

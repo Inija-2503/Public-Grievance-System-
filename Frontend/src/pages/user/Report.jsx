@@ -135,7 +135,7 @@ const Report = () => {
                     {/* Assuming ticketNumber is a field in the item */}
                     {/* Pad with leading zeros */}
                   </td>
-                  <td className="p-2 border">{item.complaintName}</td>
+                  <td className="p-2 border">{item.name}</td>
                   <td className="p-2 border">
                     {/* Format date. Check if createdAt exists and is valid */}
                     {item.complaintDate

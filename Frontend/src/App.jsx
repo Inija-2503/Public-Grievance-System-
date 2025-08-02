@@ -10,7 +10,28 @@ import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import AdminDasboard from "./pages/admin/AdminDasboard";
 import DepartmentDasboard from "./pages/department/DepartmentDasboard";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { jwtDecode } from "jwt-decode";
+import { loginSuccess, setAuthLoading } from "./features/auth/authSlice";
+import ManageDepartments from "./pages/admin/ManageDepartments";
+import ManageUsers from "./pages/admin/ManageUsers";
+import AllReports from "./pages/admin/AllReports";
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const userPayload = jwtDecode(token);
+        dispatch(loginSuccess({ user: userPayload, token }));
+      } catch (err) {
+        console.log(err);
+        localStorage.removeItem("token");
+      }
+    }
+    dispatch(setAuthLoading(false));
+  }, [dispatch]);
   return (
     <>
       <div className="mx-4 sm:mx-[10%]">
@@ -28,32 +49,57 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="/my-profile" element={<MyProfile />} />
+          {/* <Route path="/my-profile" element={<MyProfile />} /> */}
           <Route path="*" element={<NotFound />} />
           <Route
             path="/admin-dashboard"
             element={
-              <ProtectedRoute allowedRoles={["admin"]}>
+              <ProtectedRoute allowedRoles={["ADMIN"]}>
                 <AdminDasboard />
               </ProtectedRoute>
             }
           />
+          {/* <Route path="/admin-dashboard" element={<AdminDasboard />} /> */}
           <Route
             path="/department-dashboard"
             element={
-              <ProtectedRoute allowedRoles={["department"]}>
+              <ProtectedRoute allowedRoles={["DEPARTMENT"]}>
                 <DepartmentDasboard />
               </ProtectedRoute>
             }
           />
-          {/* <Route
+          <Route
             path="/my-profile"
             element={
-              <ProtectedRoute allowedRoles={["admin", "department", "USER"]}>
+              <ProtectedRoute allowedRoles={["ADMIN", "DEPARTMENT", "USER"]}>
                 <MyProfile />
               </ProtectedRoute>
             }
-          /> */}
+          />
+          <Route
+            path="/admin/Departments"
+            element={
+              <ProtectedRoute allowedRoles={["ADMIN"]}>
+                <ManageDepartments />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/Users"
+            element={
+              <ProtectedRoute allowedRoles={["ADMIN"]}>
+                <ManageUsers />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/Reports"
+            element={
+              <ProtectedRoute allowedRoles={["ADMIN"]}>
+                <AllReports />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </div>
     </>

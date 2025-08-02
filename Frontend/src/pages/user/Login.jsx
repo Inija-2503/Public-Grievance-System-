@@ -14,6 +14,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
+  const [states, setStates] = useState([]);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -65,6 +66,7 @@ const Login = () => {
           password,
           phoneNumber,
           address,
+          states,
         };
         console.log(" Submitting signup data:", payload);
         await axios.post("http://localhost:8080/api/users/signup", payload);
@@ -75,9 +77,10 @@ const Login = () => {
         setPassword("");
         setPhoneNumber("");
         setAddress("");
+        setStates("");
         setState("Sign in");
       } else {
-        const res = await axios.post("http://localhost:8080/api/users/signin", {
+        const res = await axios.post("http://localhost:8080/api/auth/login", {
           email,
           password,
         });
@@ -179,6 +182,20 @@ const Login = () => {
                 <p className="text-red-500 text-sm mt-1">
                   {errors.phoneNumber}
                 </p>
+              )}
+            </div>
+            <div className="flex flex-col">
+              <label className="text-sm font-medium text-[#2772A0]">
+                State <span className="text-red-500"> *</span>
+              </label>
+              <input
+                type="text"
+                value={states}
+                onChange={(e) => setStates(e.target.value)}
+                className="mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#2772A0]"
+              />
+              {errors.states && (
+                <p className="text-red-500 text-sm mt-1">{errors.states}</p>
               )}
             </div>
 

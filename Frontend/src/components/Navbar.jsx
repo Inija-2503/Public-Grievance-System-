@@ -5,17 +5,20 @@ import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../features/auth/authSlice";
 
-const ProfileIcon = ({ name }) => (
-  <div className="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold cursor-pointer">
-    {name ? name.charAt(0).toUpperCase() : "U"}
-  </div>
-);
+const ProfileIcon = ({ name }) => {
+  return (
+    <div className="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold cursor-pointer">
+      {name ? name.charAt(0).toUpperCase() : "U"}
+    </div>
+  );
+};
 
 const Navbar = () => {
   //   const [showMenu, setShowMenu] = useState(false);
   // const [token, setToken] = useState(true); // when we have token we login and when we dont we have logout
   // const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
   // const location = useLocation();
+  // const [formData, setFormData] = useState({ name: ""})
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -39,6 +42,8 @@ const Navbar = () => {
     navigate(path);
     setDropdownOpen(false); // Close dropdown on navigation
   };
+  const navLinkStyles = ({ isActive }) =>
+    isActive ? "text-[#2772A0] border-b-2 border-[#2772A0] pb-1" : "text-black";
   return (
     <div className="flex justify-between items-center bg-white px-4 py-4 shadow-md mb-7">
       <NavLink to="/">
@@ -51,17 +56,6 @@ const Navbar = () => {
       </NavLink>
 
       <ul className="hiddden md:flex items-start gap-5 font-medium">
-        <NavLink
-          to="/"
-          className={({ isActive }) =>
-            isActive
-              ? "text-[#2772A0] border-b-2 border-[#2772A0] pb-1"
-              : "text-black"
-          }
-        >
-          <li className=" py-1 ">Home</li>
-          <hr className="border-none outline-none h-0.5 bg-[#2772A0] w-3/5 m-auto hidden" />
-        </NavLink>
         {/* <NavLink
           to={"/dashboard"}
           className={({ isActive }) =>
@@ -73,29 +67,49 @@ const Navbar = () => {
           <li className="py-1">Dashboard</li>
           <hr className="border-none outline-none h-0.5 bg-[#2772A0] w-3/5 m-auto hidden" />
         </NavLink> */}
-        <NavLink
-          to="/report"
-          className={({ isActive }) =>
-            isActive
-              ? "text-[#2772A0] border-b-2 border-[#2772A0] pb-1"
-              : "text-black"
-          }
-        >
-          <li className="py-1">Report</li>
-          <hr className="border-none outline-none h-0.5 bg-[#2772A0] w-3/5 m-auto hidden" />
-        </NavLink>
-        <NavLink
-          to="/complaint"
-          className={({ isActive }) =>
-            isActive
-              ? "text-[#2772A0] border-b-2 border-[#2772A0] pb-1"
-              : "text-black"
-          }
-        >
-          <li className="py-1">Complaint Form</li>
-          <hr className="border-none outline-none h-0.5 bg-[#2772A0] w-3/5 m-auto hidden" />
-        </NavLink>
+        {user && (
+          <>
+            {user.role === "ADMIN" && (
+              <>
+                <NavLink to="/admin/Dashboard" className={navLinkStyles}>
+                  <li>Dashboard</li>
+                </NavLink>
+                <NavLink to="/admin/Reports" className={navLinkStyles}>
+                  <li>Reports</li>
+                </NavLink>
+                <NavLink to="/admin/Departments" className={navLinkStyles}>
+                  <li>Departments</li>
+                </NavLink>
+                <NavLink to="/admin/Users" className={navLinkStyles}>
+                  <li>Users</li>
+                </NavLink>
+              </>
+            )}
+            {user.role === "USER" && (
+              <>
+                <NavLink to="/" className={navLinkStyles}>
+                  <li className=" py-1 ">Home</li>
+                  {/* <hr className="border-none outline-none h-0.5 bg-[#2772A0] w-3/5 m-auto hidden" /> */}
+                </NavLink>
+                <NavLink to="/report" className={navLinkStyles}>
+                  <li>My Report</li>
+                </NavLink>
+                <NavLink to="/complaint" className={navLinkStyles}>
+                  <li>Lodge Complaint</li>
+                </NavLink>
+              </>
+            )}
+            {user.role === "DEPARTMENT" && (
+              <>
+                <NavLink to="/department/Dashboard" className={navLinkStyles}>
+                  <li>Department View</li>
+                </NavLink>
+              </>
+            )}
+          </>
+        )}
       </ul>
+
       <div className="flex items-center gap-4">
         {/* {isLoggedIn ? (
           <div className=" relative">
@@ -108,7 +122,7 @@ const Navbar = () => {
         {user ? (
           <div className="relative">
             <div onClick={() => setDropdownOpen((prev) => !prev)}>
-              <ProfileIcon name={user.firstName} />
+              <ProfileIcon name={user.name} />
             </div>
 
             {dropdownOpen && (

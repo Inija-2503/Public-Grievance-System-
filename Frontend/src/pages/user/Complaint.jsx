@@ -8,7 +8,7 @@ import {
 
 const ComplaintForm = () => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
+  const { user, token } = useSelector((state) => state.auth);
   const { loading, error, success } = useSelector(
     (state) => state.complaints || {}
   );
@@ -73,7 +73,7 @@ const ComplaintForm = () => {
         ...prev,
         name: user.name || "".trim(),
         email: user.email || "",
-        phoneNumber: user.phoneNumber || "",
+        phone: user.phone || "",
       }));
     }
     dispatch(resetComplaintState());
@@ -89,15 +89,19 @@ const ComplaintForm = () => {
     //   }
     // };
     // fetchDistricts();
-    axios
-      .get("http://localhost:8080/api/districts")
-      .then((res) => setDistricts(res.data))
-      .catch((err) => console.error("Failed to load districts", err));
-  }, []);
+    if (token) {
+      axios
+        .get("http://localhost:8080/api/districts", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => setDistricts(res.data))
+        .catch((err) => console.error("Failed to load districts", err));
+    }
+  }, [token]);
   useEffect(() => {
     // const fetchTaluks = async () => {
     // Fetch taluks based on selected district
-    if (form.districtId) {
+    if (form.districtId && token) {
       //     try {
       //       const res = await axios.get(
       //         `http://localhost:8080/api/taluks?district=${form.district}`
@@ -112,14 +116,16 @@ const ComplaintForm = () => {
       // };
       // fetchTaluks();
       axios
-        .get(`http://localhost:8080/api/taluks?district=${form.districtId}`)
+        .get(`http://localhost:8080/api/taluks?district=${form.districtId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
         .then((res) => setTaluks(res.data))
         .catch((err) => console.error("Failed to load taluks", err));
     } else {
       setTaluks([]);
     }
     // fetchTaluks();
-  }, [form.districtId]);
+  }, [form.districtId, token]);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -215,9 +221,9 @@ const ComplaintForm = () => {
     }
     dispatch(submitComplaint(complaintData));
     setForm({
-      name: "",
-      email: "",
-      phone: "",
+      // name: "",
+      // email: "",
+      // phone: "",
       districtId: "",
       talukId: "",
       pincode: "",
