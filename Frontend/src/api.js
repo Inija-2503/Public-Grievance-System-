@@ -48,7 +48,7 @@ export const fetchUserById = async () => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}` // ✅ pass token
+                "Authorization": `Bearer ${token}` //  pass token
             }
         });
 

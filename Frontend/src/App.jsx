@@ -17,6 +17,7 @@ import { loginSuccess, setAuthLoading } from "./features/auth/authSlice";
 import ManageDepartments from "./pages/admin/ManageDepartments";
 import ManageUsers from "./pages/admin/ManageUsers";
 import AllReports from "./pages/admin/AllReports";
+import AssignedComplaints from "./pages/department/AssignedComplaints";
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -52,16 +53,16 @@ function App() {
           {/* <Route path="/my-profile" element={<MyProfile />} /> */}
           <Route path="*" element={<NotFound />} />
           <Route
-            path="/admin-dashboard"
+            path="/admin/Dashboard"
             element={
               <ProtectedRoute allowedRoles={["ADMIN"]}>
                 <AdminDasboard />
               </ProtectedRoute>
             }
           />
-          {/* <Route path="/admin-dashboard" element={<AdminDasboard />} /> */}
+          {/* <Route path="department/Dashboard" element={<DepartmentDasboard />} /> */}
           <Route
-            path="/department-dashboard"
+            path="department/Dashboard"
             element={
               <ProtectedRoute allowedRoles={["DEPARTMENT"]}>
                 <DepartmentDasboard />
@@ -97,6 +98,14 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={["ADMIN"]}>
                 <AllReports />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/department/Complaints"
+            element={
+              <ProtectedRoute allowedRoles={["DEPARTMENT"]}>
+                <AssignedComplaints />
               </ProtectedRoute>
             }
           />

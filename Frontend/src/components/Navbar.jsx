@@ -102,7 +102,10 @@ const Navbar = () => {
             {user.role === "DEPARTMENT" && (
               <>
                 <NavLink to="/department/Dashboard" className={navLinkStyles}>
-                  <li>Department View</li>
+                  <li>Dashboard</li>
+                </NavLink>
+                <NavLink to="/department/Complaints" className={navLinkStyles}>
+                  <li>Complaints</li>
                 </NavLink>
               </>
             )}

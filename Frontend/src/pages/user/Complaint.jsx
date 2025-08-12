@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   submitComplaint,
   resetComplaintState,
-} from "../../features/complaints/complaintSlice";
+} from "../../features/complaint/complaintSlice";
 
 const ComplaintForm = () => {
   const dispatch = useDispatch();

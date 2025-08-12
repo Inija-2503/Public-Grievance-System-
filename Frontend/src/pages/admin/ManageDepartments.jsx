@@ -5,7 +5,7 @@ import {
   addDepartment,
   updateDepartment,
   deleteDepartment,
-} from "../../features/department/departmentSlice"; // Correct the path if needed
+} from "../../features/admin/departmentSlice"; // Correct the path if needed
 import Modal from "../../components/Modal"; // Assuming you have this component
 
 const ManageDepartments = () => {

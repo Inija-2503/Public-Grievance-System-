@@ -44,7 +44,7 @@ export const assignComplaint = createAsyncThunk(
   async ({ complaintId, departmentId }, { getState, rejectWithValue }) => {
     try {
       const token = getToken(getState);
-      const response = await axios.put(`http://localhost:8080/api/admin/complaints/${complaintId}/assign`, { departmentId }, {
+      const response = await axios.put(`http://localhost:8080/api/admin/complaints/${complaintId}/assign-department`, { departmentId }, {
         headers: { Authorization: `Bearer ${token}` },
       });
       return response.data; // Return the updated complaint object

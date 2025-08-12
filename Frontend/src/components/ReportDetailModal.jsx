@@ -3,13 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import {
   assignComplaint,
-  rejectComplaint,
-} from "../features/adminreport/adminComplaintsSlice";
+  // rejectComplaint,
+} from "../features/admin/adminComplaintsSlice";
 import Modal from "./Modal";
 
 const ReportDetailModal = ({ complaint, onClose }) => {
+  console.log(complaint);
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.auth);
+  console.log(token);
 
   const [showDepartmentSelect, setShowDepartmentSelect] = useState(false);
   const [departments, setDepartments] = useState([]);
@@ -19,7 +21,9 @@ const ReportDetailModal = ({ complaint, onClose }) => {
     if (showDepartmentSelect && token) {
       axios
         .get("http://localhost:8080/api/admin/departments", {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         })
         .then((res) => {
           // Ensure the response is an array before setting it
@@ -32,10 +36,27 @@ const ReportDetailModal = ({ complaint, onClose }) => {
   }, [showDepartmentSelect, token]);
 
   const handleReject = () => {
-    if (window.confirm("Are you sure you want to reject this complaint?")) {
-      dispatch(rejectComplaint(complaint.id));
-      onClose();
-    }
+    // if (window.confirm("Are you sure you want to reject this complaint?")) {
+    //   dispatch(rejectComplaint(complaint.id));
+    //   onClose();
+    // }
+    // const token = getToken(getState);
+    axios
+      .put(
+        `http://localhost:8080/api/admin/complaints/${complaint.complaintId}/status?status=REJECT`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleForward = () => {
@@ -46,7 +67,7 @@ const ReportDetailModal = ({ complaint, onClose }) => {
     if (selectedDeptId) {
       dispatch(
         assignComplaint({
-          complaintId: complaint.id,
+          complaintId: complaint.complaintId,
           departmentId: selectedDeptId,
         })
       );
@@ -62,30 +83,44 @@ const ReportDetailModal = ({ complaint, onClose }) => {
 
       <div className="space-y-2 text-sm">
         <p>
-          <strong>Ticket Number:</strong> {complaint.name}
+          <strong>Ticket Number:</strong> {complaint.ticketNumber}
         </p>
         <p>
-          <strong>User Name:</strong> {complaint.ticketNumber}
+          <strong>User Name:</strong> {complaint.name}
         </p>
 
-        {/* {complaint.district && ( */}
-        <p>
-          <strong>District:</strong> {complaint.districtId}
-        </p>
-        {/* )} */}
-        {/* {complaint.taluk && ( */}
-        <p>
-          <strong>Taluk:</strong> {complaint.talukId}
-        </p>
-        {/* )} */}
-        {/* {complaint.filePath && ( */}
-        <p>
-          <strong>File:</strong> {complaint.filePath}
-        </p>
-        {/* )} */}
+        {complaint.district && (
+          <p>
+            <strong>District:</strong> {complaint.district}
+          </p>
+        )}
+        {complaint.taluk && (
+          <p>
+            <strong>Taluk:</strong> {complaint.taluk}
+          </p>
+        )}
+        {/* {complaint.filePath && (
+          <p>
+            <strong>File:</strong> {complaint.filePath}
+          </p>
+        )} */}
         {complaint.remarks && (
           <p>
             <strong>Remarks:</strong> {complaint.remarks}
+          </p>
+        )}
+        {complaint.filePath && (
+          <p>
+            <strong>Attachment:</strong>{" "}
+            <a
+              href={`http://localhost:8080/${complaint.filePath}`}
+              // href={complaint.filePath}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
+            >
+              View Document
+            </a>
           </p>
         )}
       </div>

@@ -7,14 +7,14 @@ import { jwtDecode } from "jwt-decode";
 import { loginSuccess } from "../../features/auth/authSlice";
 
 const Login = () => {
-  const [state, setState] = useState("Sign up");
+  const [formState, setFormState] = useState("Sign up");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
-  const [states, setStates] = useState([]);
+  // const [userStates, setUserStates] = useState([]);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -22,7 +22,7 @@ const Login = () => {
   const validate = () => {
     const newErrors = {};
 
-    if (state === "Sign up") {
+    if (formState === "Sign up") {
       if (!firstName) newErrors.firstName = "First name is required";
       if (!lastName) newErrors.lastName = "Last name is required";
 
@@ -58,7 +58,7 @@ const Login = () => {
     if (!validate()) return;
 
     try {
-      if (state === "Sign up") {
+      if (formState === "Sign up") {
         const payload = {
           firstName,
           lastName,
@@ -66,7 +66,7 @@ const Login = () => {
           password,
           phoneNumber,
           address,
-          states,
+          // states: userStates,
         };
         console.log(" Submitting signup data:", payload);
         await axios.post("http://localhost:8080/api/users/signup", payload);
@@ -77,8 +77,8 @@ const Login = () => {
         setPassword("");
         setPhoneNumber("");
         setAddress("");
-        setStates("");
-        setState("Sign in");
+        // setUserStates("");
+        setFormState("Sign in");
       } else {
         const res = await axios.post("http://localhost:8080/api/auth/login", {
           email,
@@ -103,11 +103,11 @@ const Login = () => {
         localStorage.setItem("id", userPayload.id);
         alert("Login successful!");
         switch (userPayload.role) {
-          case "admin":
-            navigate("/admin/AdminDashboard");
+          case "ADMIN":
+            navigate("/admin/Dashboard");
             break;
-          case "department":
-            navigate("/department/DepartmentDashboard");
+          case "DEPARTMENT":
+            navigate("/department/Dashboard");
             break;
           default:
             navigate("/");
@@ -127,14 +127,14 @@ const Login = () => {
     >
       <div className="flex flex-col gap-4 w-full max-w-md mx-auto p-8 bg-white shadow-xl rounded-lg">
         <h2 className="text-2xl font-bold text-[#2772A0] text-center">
-          {state === "Sign up" ? "Create Account" : "Sign In"}
+          {formState === "Sign up" ? "Create Account" : "Sign In"}
         </h2>
         <p className="text-center text-sm text-gray-600 mb-2">
-          Please {state === "Sign up" ? "Sign up" : "Sign in"} to continue
+          Please {formState === "Sign up" ? "Sign up" : "Sign in"} to continue
         </p>
 
         {/* First Name */}
-        {state === "Sign up" && (
+        {formState === "Sign up" && (
           <>
             <div className="flex flex-col">
               <label className="text-sm font-medium text-[#2772A0]">
@@ -184,20 +184,20 @@ const Login = () => {
                 </p>
               )}
             </div>
-            <div className="flex flex-col">
+            {/* <div className="flex flex-col">
               <label className="text-sm font-medium text-[#2772A0]">
                 State <span className="text-red-500"> *</span>
               </label>
               <input
                 type="text"
-                value={states}
-                onChange={(e) => setStates(e.target.value)}
+                value={userStates}
+                onChange={(e) => setUserStates(e.target.value)}
                 className="mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#2772A0]"
               />
               {errors.states && (
                 <p className="text-red-500 text-sm mt-1">{errors.states}</p>
               )}
-            </div>
+            </div> */}
 
             {/* Address */}
             <div className="flex flex-col">
@@ -248,7 +248,7 @@ const Login = () => {
             <p className="text-red-500 text-sm mt-1">{errors.password}</p>
           )}
 
-          {state === "Sign up" && (
+          {formState === "Sign up" && (
             <PasswordChecklist
               rules={["minLength", "specialChar", "number", "capital"]}
               minLength={6}
@@ -264,20 +264,20 @@ const Login = () => {
           type="submit"
           className="bg-[#2772A0] text-white font-semibold py-2 px-4 rounded-md hover:bg-[#1d5b85] transition-colors duration-200"
         >
-          {state === "Sign up" ? "Create Account" : "Sign In"}
+          {formState === "Sign up" ? "Create Account" : "Sign In"}
         </button>
 
         <p className="text-sm text-center text-gray-600 mt-2">
-          {state === "Sign up"
+          {formState === "Sign up"
             ? "Already have an account?"
             : "Don't have an account?"}{" "}
           <span
             onClick={() =>
-              setState(state === "Sign up" ? "Sign in" : "Sign up")
+              setFormState(formState === "Sign up" ? "Sign in" : "Sign up")
             }
             className="text-[#2772A0] font-medium cursor-pointer hover:underline"
           >
-            {state === "Sign up" ? "Sign in" : "Sign up"}
+            {formState === "Sign up" ? "Sign in" : "Sign up"}
           </span>
         </p>
       </div>

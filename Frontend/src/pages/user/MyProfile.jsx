@@ -174,7 +174,7 @@ const MyProfile = () => {
             className="w-full border px-3 py-2 rounded"
           />
         </div>
-        <div>
+        {/* <div>
           <label className="block font-semibold">Address</label>
           <textarea
             name="address"
@@ -185,7 +185,7 @@ const MyProfile = () => {
             disabled={!editMode}
             className="w-full border px-3 py-2 rounded"
           />
-        </div>
+        </div> */}
 
         <div className="flex gap-4 mt-4">
           {editMode ? (

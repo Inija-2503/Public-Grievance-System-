@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllComplaints } from "../../features/adminreport/adminComplaintsSlice";
+import { fetchAllComplaints } from "../../features/admin/adminComplaintsSlice";
 import ReportDetailModal from "../../components/ReportDetailModal"; // The modal you created
 
 const AllReports = () => {
@@ -19,6 +19,7 @@ const AllReports = () => {
   }, [dispatch]);
 
   const handleViewDetails = (complaint) => {
+    console.log(complaint);
     setSelectedComplaint(complaint);
   };
 
@@ -47,7 +48,7 @@ const AllReports = () => {
           </thead>
           <tbody>
             {complaints && complaints.length > 0 ? (
-              complaints.map((complaint) => (
+              complaints?.map((complaint) => (
                 <tr key={complaint.id}>
                   <td className="p-2 border">{complaint.name}</td>
                   <td className="p-2 border">{complaint.ticketNumber}</td>
