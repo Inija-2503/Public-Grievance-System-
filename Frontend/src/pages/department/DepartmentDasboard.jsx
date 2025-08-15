@@ -37,19 +37,19 @@ const DepartmentDashboard = () => {
   }
 
   const chartData = {
-    labels: ["Pending", "Resolved", "Rejected"],
+    labels: ["Assigned", "Resolved"],
     datasets: [
       {
         label: "Assigned Complaints",
         data: [
-          stats.pendingComplaints || 0,
+          stats.assignedComplaints || 0,
           stats.resolvedComplaints || 0,
-          stats.rejectedComplaints || 0,
+          // stats.rejectedComplaints || 0,
         ],
         backgroundColor: [
           "rgba(255, 206, 86, 0.7)",
           "rgba(75, 192, 192, 0.7)",
-          "rgba(255, 99, 132, 0.7)",
+          // "rgba(255, 99, 132, 0.7)",
         ],
         borderColor: "white",
         borderWidth: 2,
@@ -69,13 +69,16 @@ const DepartmentDashboard = () => {
         <div className="bg-blue-100 p-4 rounded shadow">
           <h2 className="font-bold text-blue-800">Total Assigned</h2>
 
-          <p className="text-3xl">{stats.totalAssigned || 0}</p>
+          <p className="text-3xl">{stats.assignedComplaints || 0}</p>
         </div>
         <div className="bg-yellow-100 p-4 rounded shadow">
-          <h2 className="font-bold text-yellow-800">Pending</h2>
-          <p className="text-3xl">{stats.pendingComplaints || 0}</p>
+          <h2 className="font-bold text-yellow-800">Resolve</h2>
+          <p className="text-3xl">{stats.resolvedComplaints || 0}</p>
         </div>
-        {/* ... other stat cards are fine ... */}
+        {/* <div className="bg-yellow-100 p-4 rounded shadow">
+          <h2 className="font-bold text-yellow-800">Reject</h2>
+          <p className="text-3xl">{stats.rejectedComplaints || 0}</p>
+        </div> */}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -105,6 +108,8 @@ const DepartmentDashboard = () => {
                 <tr>
                   <th className="p-2 text-left">Ticket Number</th>
                   <th className="p-2 text-left">User Name</th>
+                  <th className="p-2 text-left">Department Name</th>
+                  <th className="p-2 text-left">Date</th>
                   <th className="p-2 text-left">Status</th>
                   <th className="p-2 text-left">Action</th>
                 </tr>
@@ -116,7 +121,11 @@ const DepartmentDashboard = () => {
                     <tr key={c.ticketNumber} className="border-b">
                       <td className="p-2">{c.ticketNumber}</td>
 
-                      <td className="p-2">{c.complaintName}</td>
+                      <td className="p-2">{c.name}</td>
+                      <td className="p-2 ">{c.department}</td>
+                      <td className="p-2 ">
+                        {new Date(c.complaintDate).toLocaleDateString()}
+                      </td>
                       <td className="p-2">{c.status}</td>
                       <td className="p-2">
                         <button

@@ -7,6 +7,7 @@ import {
 import Modal from "./Modal";
 
 const DepartmentDetailModal = ({ complaint, onClose }) => {
+  console.log("Complaint object in modal:", complaint);
   const dispatch = useDispatch();
 
   // Local state for the form elements within the modal
@@ -24,7 +25,7 @@ const DepartmentDetailModal = ({ complaint, onClose }) => {
     if (selectedStatus && selectedStatus !== complaint.status) {
       dispatch(
         updateComplaintStatus({
-          complaintId: complaint.id,
+          complaintId: complaint.complaintId,
           status: selectedStatus,
         })
       );
@@ -34,7 +35,7 @@ const DepartmentDetailModal = ({ complaint, onClose }) => {
     if (selectedFile) {
       dispatch(
         uploadDepartmentDocument({
-          complaintId: complaint.id,
+          complaintId: complaint.complaintId,
           file: selectedFile,
         })
       );
@@ -53,27 +54,87 @@ const DepartmentDetailModal = ({ complaint, onClose }) => {
         <p>
           <strong>Ticket Number:</strong> {complaint.ticketNumber}
         </p>
-        <p>
+        {/* <p>
           <strong>User Name:</strong> {complaint.complaintName}
-        </p>
+        </p> */}
         <p>
-          <strong>Remarks:</strong>{" "}
-          {complaint.remarks || "No remarks provided."}
+          <strong>User Name:</strong> {complaint.name}
+        </p>
+
+        {complaint.district && (
+          <p>
+            <strong>District:</strong> {complaint.district}
+          </p>
+        )}
+        {complaint.taluk && (
+          <p>
+            <strong>Taluk:</strong> {complaint.taluk}
+          </p>
+        )}
+        <p>
+          <strong>Complaint:</strong>{" "}
+          {complaint.remarks || "No complaint provided."}
         </p>
         <p>
           <strong>Current Status:</strong> {complaint.status}
         </p>
-        {complaint.filePath && (
+        {complaint.filePath ? (
           <p>
-            <strong>Attachment:</strong>{" "}
+            <strong>User Document:</strong>{" "}
             <a
-              href={`http://localhost:8080/uploads/${complaint.filePath}`}
+              href={`http://localhost:8080/${complaint.filePath}`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 hover:underline"
             >
               View Document
             </a>
+          </p>
+        ) : (
+          <p>
+            <strong>User Document:</strong>{" "}
+            <button
+              onClick={() => alert("No documents uploaded yet.")}
+              className="text-red-500 hover:underline"
+              style={{
+                background: "none",
+                border: "none",
+                padding: 0,
+                cursor: "pointer",
+              }}
+            >
+              View Document
+            </button>
+          </p>
+        )}
+
+        {complaint.deptSolutionFilePath ? (
+          <p>
+            <strong>Department Document:</strong>{" "}
+            <a
+              href={`http://localhost:8080/${complaint.deptSolutionFilePath}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
+            >
+              View Document
+            </a>
+          </p>
+        ) : (
+          <p>
+            <strong>Department Document:</strong>{" "}
+            <button
+              onClick={() => alert("No documents uploaded yet.")}
+              className="text-red-500 hover:underline"
+              style={{
+                background: "none",
+                border: "none",
+                padding: 0,
+                cursor: "pointer",
+              }}
+            >
+              View Document
+            </button>
           </p>
         )}
       </div>
@@ -90,7 +151,7 @@ const DepartmentDetailModal = ({ complaint, onClose }) => {
             <option value="ASSIGNED">Assigned</option>
             <option value="RESOLVED">Resolved</option>
             <option value="REJECTED">Rejected</option>
-            <option value="ADMIN_VERIFY">Needs Admin Verification</option>
+            {/* <option value="ADMIN_VERIFY">Needs Admin Verification</option> */}
           </select>
         </div>
 

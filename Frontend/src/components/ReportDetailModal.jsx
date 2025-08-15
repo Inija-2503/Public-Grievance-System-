@@ -8,10 +8,10 @@ import {
 import Modal from "./Modal";
 
 const ReportDetailModal = ({ complaint, onClose }) => {
-  console.log(complaint);
+  // console.log("Complaint object in modal:", complaint);
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.auth);
-  console.log(token);
+  // console.log(token);
 
   const [showDepartmentSelect, setShowDepartmentSelect] = useState(false);
   const [departments, setDepartments] = useState([]);
@@ -106,21 +106,66 @@ const ReportDetailModal = ({ complaint, onClose }) => {
         )} */}
         {complaint.remarks && (
           <p>
-            <strong>Remarks:</strong> {complaint.remarks}
+            <strong>Complaint:</strong> {complaint.remarks}
           </p>
         )}
-        {complaint.filePath && (
+        {complaint.filePath ? (
           <p>
-            <strong>Attachment:</strong>{" "}
+            <strong>User Document:</strong>{" "}
             <a
               href={`http://localhost:8080/${complaint.filePath}`}
-              // href={complaint.filePath}
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 hover:underline"
             >
               View Document
             </a>
+          </p>
+        ) : (
+          <p>
+            <strong>User Document:</strong>{" "}
+            <button
+              onClick={() => alert("No documents uploaded yet.")}
+              className="text-red-500 hover:underline"
+              style={{
+                background: "none",
+                border: "none",
+                padding: 0,
+                cursor: "pointer",
+              }}
+            >
+              View Document
+            </button>
+          </p>
+        )}
+
+        {complaint.deptSolutionFilePath ? (
+          <p>
+            <strong>Department Document:</strong>{" "}
+            <a
+              href={`http://localhost:8080/${complaint.deptSolutionFilePath}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
+            >
+              View Document
+            </a>
+          </p>
+        ) : (
+          <p>
+            <strong>Department Document:</strong>{" "}
+            <button
+              onClick={() => alert("No documents uploaded yet.")}
+              className="text-red-500 hover:underline"
+              style={{
+                background: "none",
+                border: "none",
+                padding: 0,
+                cursor: "pointer",
+              }}
+            >
+              View Document
+            </button>
           </p>
         )}
       </div>

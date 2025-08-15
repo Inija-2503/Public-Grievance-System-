@@ -75,10 +75,10 @@ const Report = () => {
     dispatch(fetchReport());
   }, [dispatch]);
 
-  const handleViewDetails = (filePath) => {
-    if (filePath) {
+  const handleViewDetails = (deptSolutionFilePath) => {
+    if (deptSolutionFilePath) {
       // Assuming your backend serves uploaded files from /uploads/
-      window.open(`http://localhost:8080/uploads/${filePath}`, "_blank");
+      window.open(`http://localhost:8080/${deptSolutionFilePath}`, "_blank");
     } else {
       alert("No document uploaded for this complaint.");
     }
@@ -114,7 +114,7 @@ const Report = () => {
         <table className="min-w-full border border-gray-300 text-sm text-center">
           <thead className="bg-blue-100 text-gray-700 uppercase">
             <tr>
-              <th className="p-2 border">Sl. No</th>
+              {/* <th className="p-2 border">Sl. No</th> */}
               <th className="p-2 border">Ticket Number</th>
               <th className="p-2 border">User Name</th>
               <th className="p-2 border">Complaint Date</th>
@@ -126,7 +126,7 @@ const Report = () => {
             {complaints.length > 0 ? (
               complaints.map((item) => (
                 <tr key={item.id} className="hover:bg-gray-100">
-                  <td className="p-2 border">{item.slNo}</td>
+                  {/* <td className="p-2 border">{item + 1}</td> */}
                   <td className="p-2 border">
                     {/* {item.id
                       ? `TICK-{item.id.toString().padStart(5, "0")}`
@@ -145,7 +145,9 @@ const Report = () => {
                   <td className="p-2 border">{item.status || "Pending"}</td>
                   <td className="p-2 border">
                     <button
-                      onClick={() => handleViewDetails(item.filePath)}
+                      onClick={() =>
+                        handleViewDetails(item.deptSolutionFilePath)
+                      }
                       className="text-blue-600 hover:underline"
                     >
                       View Details

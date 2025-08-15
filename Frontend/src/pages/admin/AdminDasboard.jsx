@@ -28,7 +28,7 @@ const AdminDashboard = () => {
   };
 
   const chartData = {
-    labels: ["Pending", "Resolved", "Rejected", "Admin Verify"],
+    labels: ["Pending", "Resolved", "Rejected", "Assigned"],
     datasets: [
       {
         label: "# of Complaints",
@@ -36,7 +36,8 @@ const AdminDashboard = () => {
           stats.pendingComplaints,
           stats.resolvedComplaints,
           stats.rejectedComplaints,
-          stats.adminVerifyComplaints,
+          // stats.adminVerifyComplaints,
+          stats.assignedComplaints,
         ],
         backgroundColor: [
           "rgba(255, 206, 86, 0.7)", // Yellow
@@ -83,8 +84,8 @@ const AdminDashboard = () => {
           <p className="text-3xl">{stats.rejectedComplaints}</p>
         </div>
         <div className="bg-gray-200 p-4 rounded shadow">
-          <h2 className="font-bold text-gray-600">Admin Verify</h2>
-          <p className="text-3xl">{stats.adminVerifyComplaints}</p>
+          <h2 className="font-bold text-gray-600">Assigned</h2>
+          <p className="text-3xl">{stats.assignedComplaints}</p>
         </div>
       </div>
 

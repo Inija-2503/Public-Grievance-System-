@@ -3,11 +3,7 @@ import axios from "axios";
 
 const getToken = (getState) => getState().auth.token;
 
-// --- ASYNC THUNKS (API Calls) ---
 
-/**
- * Fetches the list of complaints assigned to a specific department.
- */
 export const fetchDepartmentComplaints = createAsyncThunk(
   "department/fetchComplaints",
   async (_, { getState, rejectWithValue }) => {
@@ -26,44 +22,75 @@ export const fetchDepartmentComplaints = createAsyncThunk(
     }
   }
 );
+// export const fetchDepartmentStatus = createAsyncThunk(
+//   'department/fetchByStatus',
+//   async (status, { getState, rejectWithValue }) => {
+//     try {
+//       const token = getState().auth.token;
+//       // Sahi API URL ko call karein
+//       const response = await axios.get(
+//         `http://localhost:8080/api/department/complaints/status/ASSIGNED`,
+//         { headers: { Authorization: `Bearer ${token}` } }
+//       );
+//       return response.data;
+//     } catch (err) {
+//       return rejectWithValue(err.response?.data?.message || 'Failed to fetch complaints by status.');
+//     }
+//   }
+// );
 
-/**
- * Updates the status of a complaint to RESOLVED or REJECTED.
- */
+
+// export const updateComplaintStatus = createAsyncThunk(
+//   "department/updateStatus",
+//   async ({ complaintId, status, photoUrl }, { getState, rejectWithValue }) => {
+//     try {
+//       const token = getToken(getState);
+
+//       let url = "";
+//       let config = {
+//         headers: { Authorization: `Bearer ${token}` },
+//       };
+
+//       if (status === "RESOLVED") {
+//         url = `http://localhost:8080/api/department/resolve/${complaintId}?photoUrl=${encodeURIComponent(
+//           photoUrl || ""
+//         )}`;
+//       } else if (status === "REJECTED") {
+//         url = `http://localhost:8080/api/department/reject/${complaintId}`;
+//       } else {
+//         return rejectWithValue("Invalid status");
+//       }
+
+//       const response = await axios.put(url, {}, config);
+//       return response.data;
+//     } catch (err) {
+//       return rejectWithValue(
+//         err.response?.data?.message || "Failed to update status."
+//       );
+//     }
+//   }
+// );
+
 export const updateComplaintStatus = createAsyncThunk(
-  "department/updateStatus",
-  async ({ complaintId, status, photoUrl }, { getState, rejectWithValue }) => {
-    try {
-      const token = getToken(getState);
-
-      let url = "";
-      let config = {
-        headers: { Authorization: `Bearer ${token}` },
-      };
-
-      if (status === "RESOLVED") {
-        url = `http://localhost:8080/api/department/resolve/${complaintId}?photoUrl=${encodeURIComponent(
-          photoUrl || ""
-        )}`;
-      } else if (status === "REJECTED") {
-        url = `http://localhost:8080/api/department/reject/${complaintId}`;
-      } else {
-        return rejectWithValue("Invalid status");
-      }
-
-      const response = await axios.put(url, {}, config);
-      return response.data;
-    } catch (err) {
-      return rejectWithValue(
-        err.response?.data?.message || "Failed to update status."
-      );
+    'department/updateStatus',
+    async ({ complaintId, status }, { getState, rejectWithValue }) => {
+        try {
+            const token = getToken(getState);
+            const response = await axios.put(
+                `http://localhost:8080/api/department/complaints/${complaintId}/status?status=${status}`,
+                {}, 
+                {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
+            return response.data;
+        } catch (err) {
+            return rejectWithValue(err.response?.data?.message || 'Failed to update status.');
+        }
     }
-  }
 );
 
-/**
- * Uploads a document for a specific complaint.
- */
+
 export const uploadDepartmentDocument = createAsyncThunk(
   "department/uploadDocument",
   async ({ complaintId, file }, { getState, rejectWithValue }) => {
@@ -115,6 +142,19 @@ const departmentSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+
+      // .addCase(fetchDepartmentStatus.pending, (state) => {
+      //   state.loading = true;
+      //   state.error = null;
+      // })
+      // .addCase(fetchDepartmentStatus.fulfilled, (state, action) => {
+      //   state.loading = false;
+      //   state.complaints = action.payload;
+      // })
+      // .addCase(fetchDepartmentStatus.rejected, (state, action) => {
+      //   state.loading = false;
+      //   state.error = action.payload;
+      // })
 
       // Update complaint after status change
       .addCase(updateComplaintStatus.fulfilled, (state, action) => {
