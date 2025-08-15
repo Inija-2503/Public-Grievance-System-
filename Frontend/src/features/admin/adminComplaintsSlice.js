@@ -4,7 +4,7 @@ import axios from 'axios';
 // Helper to get the token from the Redux state
 const getToken = (getState) => getState().auth.token;
 
-// --- ASYNC THUNKS ---
+
 
 // Fetches all complaints for the admin dashboard
 export const fetchAllComplaints = createAsyncThunk(

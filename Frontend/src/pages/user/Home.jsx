@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import header from "../../assets/header.png"; // Adjust the path as necessary
+import header from "../../assets/header.png";
 const Home = () => {
   const navigate = useNavigate();
 
@@ -52,7 +52,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Footer (optional) */}
+      {/* Footer  */}
       <footer className="mt-auto text-center py-4 text-sm text-gray-600">
         © 2025 Public Grievance Portal. All rights reserved.
       </footer>

@@ -78,7 +78,7 @@ export const updateUser = async (id, data) => {
 
         // Check for non-OK responses
         if (!res.ok) {
-            const errorData = await res.json(); // Try to parse error message
+            const errorData = await res.json(); // Trys to parse error message
             console.error(`Error updating user ${id}:`, errorData);
             throw new Error(errorData.message || `Failed to update user data for ID: ${id}`);
         }

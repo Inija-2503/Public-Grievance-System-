@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-// Helper function to get the token from the state
+//  function to get the token from the state
 const getToken = (getState) => getState().auth.token;
 
-// THUNK for fetching all departments
+//  fetching all departments
 export const fetchDepartments = createAsyncThunk(
   'departments/fetchAll',
   async (_, { getState, rejectWithValue }) => {
@@ -20,7 +20,7 @@ export const fetchDepartments = createAsyncThunk(
   }
 );
 
-// THUNK for adding a new department
+//  adding a new department
 export const addDepartment = createAsyncThunk(
   'departments/add',
   async (departmentData, { getState, rejectWithValue }) => {
@@ -36,7 +36,7 @@ export const addDepartment = createAsyncThunk(
   }
 );
 
-// THUNK for updating a department
+//  updating a department
 export const updateDepartment = createAsyncThunk(
   'departments/update',
   async ({ id, departmentData }, { getState, rejectWithValue }) => {
@@ -52,7 +52,7 @@ export const updateDepartment = createAsyncThunk(
   }
 );
 
-// THUNK for deleting a department
+// deleting a department
 export const deleteDepartment = createAsyncThunk(
   'departments/delete',
   async (id, { getState, rejectWithValue }) => {

@@ -77,7 +77,6 @@ const Report = () => {
 
   const handleViewDetails = (deptSolutionFilePath) => {
     if (deptSolutionFilePath) {
-      // Assuming your backend serves uploaded files from /uploads/
       window.open(`http://localhost:8080/${deptSolutionFilePath}`, "_blank");
     } else {
       alert("No document uploaded for this complaint.");

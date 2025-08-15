@@ -5,7 +5,6 @@ const Dashboard = () => {
   const [complaints, setComplaints] = useState([]);
 
   useEffect(() => {
-    // Fetch recent complaints (replace with your API endpoint)
     axios.get("http://localhost:5000/api/complaints").then((res) => {
       setComplaints(res.data);
     });

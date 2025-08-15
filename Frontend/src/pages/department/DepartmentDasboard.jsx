@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { fetchDashboardStats } from "../../features/department/departmentDashboardSlice";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
-import DepartmentDetailModal from "../../components/DepartmentReportModal"; // Assuming this is your modal
+import DepartmentDetailModal from "../../components/DepartmentReportModal";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -115,7 +115,6 @@ const DepartmentDashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                {/* Safety check for recentComplaints */}
                 {Array.isArray(recentComplaints) &&
                   recentComplaints.map((c) => (
                     <tr key={c.ticketNumber} className="border-b">

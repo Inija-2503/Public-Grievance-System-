@@ -5,9 +5,8 @@ import {
   addDepartment,
   updateDepartment,
   deleteDepartment,
-} from "../../features/admin/departmentSlice"; // Correct the path if needed
-import Modal from "../../components/Modal"; // Assuming you have this component
-
+} from "../../features/admin/departmentSlice";
+import Modal from "../../components/Modal";
 const ManageDepartments = () => {
   const dispatch = useDispatch();
   const {

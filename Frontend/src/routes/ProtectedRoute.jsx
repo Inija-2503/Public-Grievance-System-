@@ -14,7 +14,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Check if user's role is allowed
+  // Checks if user's role is allowed
   const isAuthorized = allowedRoles.includes(user.role);
 
   return isAuthorized ? children : <Navigate to="/unauthorized" replace />;

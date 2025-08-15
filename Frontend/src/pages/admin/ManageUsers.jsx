@@ -37,7 +37,6 @@ const ManageUsers = () => {
                   <td className="p-2 border">{user.firstName}</td>
                   <td className="p-2 border">{user.lastName}</td>
                   <td className="p-2 border">{user.email}</td>
-                  {/* Note: Ensure your data actually has a 'phone' and 'address' property */}
                   <td className="p-2 border">{user.phoneNumber || "N/A"}</td>
                   <td className="p-2 border">{user.address || "N/A"}</td>
                   <td className="p-2 border">{user.role}</td>
